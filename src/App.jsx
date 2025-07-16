@@ -1,16 +1,22 @@
-import { Routes, Route } from "react-router-dom";
-import Login from "./components/Login";
-import Register from "./components/Register";
-import BotSetup from "./components/BotSetup";
-import Chat from "./components/Chat";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Chat from "./pages/Chat";
 
-export default function App() {
+function App() {
+  const isAuthenticated = localStorage.getItem("token");
+
   return (
     <Routes>
-      <Route path="/" element={<Login />} />
+      <Route path="/" element={<Navigate to="/login" />} />
+      <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/setup" element={<BotSetup />} />
-      <Route path="/chat" element={<Chat />} />
+      <Route
+        path="/chat"
+        element={isAuthenticated ? <Chat /> : <Navigate to="/login" />}
+      />
     </Routes>
   );
 }
+
+export default App;
