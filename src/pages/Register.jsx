@@ -39,10 +39,10 @@ function Register() {
 
   return (
     <div className={`register-wrapper ${theme}`}>
+      <button className="theme-toggle" onClick={toggleTheme} type="button">
+        {theme === "light" ? "🌙 Escuro" : "🌞 Claro"}
+      </button>
       <div className="register-box">
-        <button className="theme-toggle" onClick={toggleTheme} type="button">
-          {theme === "light" ? "🌙 Escuro" : "🌞 Claro"}
-        </button>
 
         <h1 className="register-title">Cadastro</h1>
         <form onSubmit={handleSubmit} className="register-form">

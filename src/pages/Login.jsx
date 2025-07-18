@@ -54,10 +54,10 @@ function Login() {
         color: theme === "dark" ? "#f9f9f9" : "#222",
       }}
     >
-      <div className="login-box">
         <button className="theme-toggle" onClick={toggleTheme}>
           {theme === "light" ? "🌙 Modo Escuro" : "🌞 Modo Claro"}
         </button>
+      <div className="login-box">
 
         <h1 className="login-title">
           {temaSelecionado.emoji} Login
