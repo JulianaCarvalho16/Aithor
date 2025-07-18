@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import axios from "../services/api";
 import "./Login.css";
 
-// Estilos por perfil de bot
 const temas = {
   fofo: { fundo: "#ffeef5", emoji: "💖" },
   engraçado: { fundo: "#fffbe6", emoji: "😂" },
