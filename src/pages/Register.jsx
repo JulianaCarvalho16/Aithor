@@ -7,7 +7,7 @@ function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [estilo, setEstilo] = useState("");
+  const [style, setStyle] = useState("");
   const [theme, setTheme] = useState("light");
   const navigate = useNavigate();
 
@@ -27,9 +27,9 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("/auth/register", { name, email, password, estilo });
+      await axios.post("/auth/register", { name, email, password, style });
       localStorage.setItem("userName", name);
-      localStorage.setItem("estilo", estilo);
+      localStorage.setItem("style", style);
       alert("Cadastro realizado! Faça login.");
       navigate("/login");
     } catch (err) {
@@ -64,11 +64,11 @@ function Register() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <label htmlFor="estilo">Qual estilo de bot você prefere?</label>
+          <label htmlFor="style">Qual style de bot você prefere?</label>
             <select
-              id="estilo"
-              value={estilo}
-              onChange={(e) => setEstilo(e.target.value)}
+              id="style"
+              value={style}
+              onChange={(e) => setStyle(e.target.value)}
               required
             >
               <option value=""> </option>
