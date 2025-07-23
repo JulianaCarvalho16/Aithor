@@ -114,7 +114,7 @@ function Chat() {
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userName");
-    navigate("/login");
+    navigate("/Login");
   };
 
   const sendMessage = async () => {

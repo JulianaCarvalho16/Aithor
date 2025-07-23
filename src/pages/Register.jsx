@@ -80,7 +80,7 @@ function Register() {
             </select>
           <button type="submit">Cadastrar</button>
           <p>
-            Já tem conta? <a href="/login">Faça login</a>
+            Já tem conta? <a href="/Login">Faça login</a>
           </p>
         </form>
       </div>

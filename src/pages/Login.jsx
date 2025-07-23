@@ -80,7 +80,7 @@ function Login() {
           />
           <button type="submit">Entrar</button>
           <p>
-            Não tem conta? <a href="/register">Registre-se</a>
+            Não tem conta? <a href="/Register">Registre-se</a>
           </p>
         </form>
       </div>
