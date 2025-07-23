@@ -31,7 +31,7 @@ function Register() {
       localStorage.setItem("userName", name);
       localStorage.setItem("style", style);
       alert("Cadastro realizado! Faça login.");
-      navigate("/login");
+      window.location.href = "/Login";
     } catch (err) {
       alert("Erro ao registrar");
     }

@@ -39,7 +39,7 @@ function Login() {
       const res = await axios.get("/auth/login", { email, password });
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("userName", res.data.name);
-        navigate("/chat");
+        window.location.href = "/Chat";
     } catch (err) {
       console.error("Erro ao fazer login:", err);
       alert("Erro ao fazer login. Verifique suas credenciais.");
