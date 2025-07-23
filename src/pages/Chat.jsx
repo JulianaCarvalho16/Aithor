@@ -72,18 +72,21 @@ function Chat() {
   useEffect(() => {
     const greetingMessage = {
       role: "assistant",
-      content: getGreetingByStyle(userName, estilo)
+      content: getGreetingByStyle(userName, estilo),
     };
-    setMessages([greetingMessage]); 
+    setMessages([greetingMessage]);
 
     const fetchMessages = async () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get("/chat/history", {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         });
 
-        const messagesFromDB = res.data.flatMap(conv => conv.messages);
+        const messagesFromDB = res.data
+          .flatMap((conv) => conv.messages)
+          .filter((msg) => msg && typeof msg.content === "string");
+
         setMessages((prev) => [...prev, ...messagesFromDB]);
       } catch (err) {
         console.error("Erro ao buscar histórico:", err.message);
@@ -95,12 +98,11 @@ function Chat() {
 
   const handleEstiloChange = async (novoEstilo) => {
     localStorage.setItem("style", novoEstilo);
-    setEstilo(novoEstilo);
     try {
       const token = localStorage.getItem("token");
 
       await axios.put("/auth/style", { style: novoEstilo }, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
     } catch (err) {
       console.error("Erro ao atualizar estilo no banco:", err.message);
@@ -116,25 +118,35 @@ function Chat() {
   };
 
   const sendMessage = async () => {
-    if (!input.trim()) return;
+  if (!input.trim()) return;
 
-    const userMessage = { role: "user", content: input };
-    setMessages((prev) => [...prev, userMessage]);
-    setInput("");
-    setLoading(true);
+  const userMessage = { role: "user", content: input };
+  setMessages((prev) => [...prev, userMessage]);
+  setInput("");
+  setLoading(true);
 
-    try {
-      const res = await axios.post("/chat/message", { message: input }, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+  try {
+    const res = await axios.post("/chat/message", { message: input }, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+
+    const reply = res.data.reply;
+
+    if (Array.isArray(reply)) {
+      reply.forEach((msg) => {
+        if (msg && typeof msg.content === "string") {
+          setMessages((prev) => [...prev, msg]);
+        }
       });
-      const botMessage = { role: "assistant", content: res.data.reply };
-      setMessages((prev) => [...prev, botMessage]);
-    } catch (err) {
-      alert("Erro ao enviar mensagem");
-    } finally {
-      setLoading(false);
+    } else if (typeof reply === "string") {
+      setMessages((prev) => [...prev, { role: "assistant", content: reply }]);
     }
-  };
+  } catch (err) {
+    alert("Erro ao enviar mensagem");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="chat-wrapper">
