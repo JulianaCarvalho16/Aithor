@@ -45,7 +45,6 @@ function Chat() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   const theme = localStorage.getItem("theme") || "light";
   const userName = localStorage.getItem("userName") || "usuário";
@@ -83,7 +82,14 @@ function Chat() {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        const messagesFromDB = res.data
+        const data = res.data;
+
+        if (!Array.isArray(data)) {
+          console.error("Formato inesperado do histórico:", data);
+          return;
+        }
+
+        const messagesFromDB = data
           .flatMap((conv) => conv.messages)
           .filter((msg) => msg && typeof msg.content === "string");
 
@@ -101,52 +107,66 @@ function Chat() {
     try {
       const token = localStorage.getItem("token");
 
-      await axios.put("/auth/style", { style: novoEstilo }, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.put(
+        "/auth/style",
+        { style: novoEstilo },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
     } catch (err) {
       console.error("Erro ao atualizar estilo no banco:", err.message);
     }
 
-    window.location.reload();
+    window.location.reload(); 
   };
 
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userName");
-    navigate("/Login");
+    window.location.href = "/Login";
   };
 
   const sendMessage = async () => {
-  if (!input.trim()) return;
+    if (!input.trim()) return;
 
-  const userMessage = { role: "user", content: input };
-  setMessages((prev) => [...prev, userMessage]);
-  setInput("");
-  setLoading(true);
+    const userMessage = { role: "user", content: input };
+    setMessages((prev) => [...prev, userMessage]);
+    setInput("");
+    setLoading(true);
 
-  try {
-    const res = await axios.post("/chat/message", { message: input }, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
-
-    const reply = res.data.reply;
-
-    if (Array.isArray(reply)) {
-      reply.forEach((msg) => {
-        if (msg && typeof msg.content === "string") {
-          setMessages((prev) => [...prev, msg]);
+    try {
+      const res = await axios.post(
+        "/chat/message",
+        { message: input },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         }
-      });
-    } else if (typeof reply === "string") {
-      setMessages((prev) => [...prev, { role: "assistant", content: reply }]);
+      );
+
+      const reply = res.data.reply;
+
+      if (Array.isArray(reply)) {
+        reply.forEach((msg) => {
+          if (msg && typeof msg.content === "string") {
+            setMessages((prev) => [...prev, msg]);
+          }
+        });
+      } else if (typeof reply === "string") {
+        setMessages((prev) => [
+          ...prev,
+          { role: "assistant", content: reply },
+        ]);
+      }
+    } catch (err) {
+      alert("Erro ao enviar mensagem");
+      console.error("Erro:", err.message);
+    } finally {
+      setLoading(false);
     }
-  } catch (err) {
-    alert("Erro ao enviar mensagem");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   return (
     <div className="chat-wrapper">
@@ -176,7 +196,9 @@ function Chat() {
             <option value="sarcastico">Sarcastico</option>
           </select>
 
-          <button onClick={logout} className="logout-btn">Sair</button>
+          <button onClick={logout} className="logout-btn">
+            Sair
+          </button>
         </div>
       </div>
 
@@ -192,7 +214,8 @@ function Chat() {
             key={index}
             className="chat-message"
             style={{
-              backgroundColor: msg.role === "user" ? tema.userBg : tema.botBg,
+              backgroundColor:
+                msg.role === "user" ? tema.userBg : tema.botBg,
               color: "#000",
               alignSelf: msg.role === "user" ? "flex-end" : "flex-start",
               textAlign: msg.role === "user" ? "right" : "left",
@@ -203,7 +226,10 @@ function Chat() {
         ))}
 
         {loading && (
-          <div className="chat-message loading" style={{ backgroundColor: tema.botBg }}>
+          <div
+            className="chat-message loading"
+            style={{ backgroundColor: tema.botBg }}
+          >
             Escrevendo...
           </div>
         )}
