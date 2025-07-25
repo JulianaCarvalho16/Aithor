@@ -30,9 +30,8 @@ function Register() {
       await axios.post("/auth/register", { name, email, password, style });
       localStorage.setItem("userName", name);
       localStorage.setItem("style", style);
-      localStorage.setItem("estilo", style);
       alert("Cadastro realizado! Faça login.");
-      window.location.href = "/Login";
+      navigate("/login");
     } catch (err) {
       alert("Erro ao registrar");
     }
@@ -81,7 +80,7 @@ function Register() {
             </select>
           <button type="submit">Cadastrar</button>
           <p>
-            Já tem conta? <a href="/Login">Faça login</a>
+            Já tem conta? <a href="/login">Faça login</a>
           </p>
         </form>
       </div>

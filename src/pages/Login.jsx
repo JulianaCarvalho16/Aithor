@@ -17,8 +17,8 @@ function Login() {
   const [theme, setTheme] = useState("light");
   const navigate = useNavigate();
 
-  const style = localStorage.getItem("style") || "fofo";
-  const temaSelecionado = temas[style];
+  const estilo = localStorage.getItem("estilo") || "fofo";
+  const temaSelecionado = temas[estilo];
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") || "light";
@@ -37,10 +37,9 @@ function Login() {
     e.preventDefault();
     try {
       const res = await axios.post("/auth/login", { email, password });
-
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("userName", res.data.name);
-        window.location.href = "/chat";
+        navigate("/chat");
     } catch (err) {
       console.error("Erro ao fazer login:", err);
       alert("Erro ao fazer login. Verifique suas credenciais.");
@@ -81,7 +80,7 @@ function Login() {
           />
           <button type="submit">Entrar</button>
           <p>
-            Não tem conta? <a href="/Register">Registre-se</a>
+            Não tem conta? <a href="/register">Registre-se</a>
           </p>
         </form>
       </div>
