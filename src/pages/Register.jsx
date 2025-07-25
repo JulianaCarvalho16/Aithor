@@ -30,6 +30,7 @@ function Register() {
       await axios.post("/auth/register", { name, email, password, style });
       localStorage.setItem("userName", name);
       localStorage.setItem("style", style);
+      localStorage.setItem("estilo", style);
       alert("Cadastro realizado! Faça login.");
       window.location.href = "/Login";
     } catch (err) {

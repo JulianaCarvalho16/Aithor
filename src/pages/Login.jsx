@@ -17,8 +17,8 @@ function Login() {
   const [theme, setTheme] = useState("light");
   const navigate = useNavigate();
 
-  const estilo = localStorage.getItem("estilo") || "fofo";
-  const temaSelecionado = temas[estilo];
+  const style = localStorage.getItem("style") || "fofo";
+  const temaSelecionado = temas[style];
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") || "light";
@@ -36,10 +36,11 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.get("/auth/login", { email, password });
+      const res = await axios.post("/auth/login", { email, password });
+
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("userName", res.data.name);
-        window.location.href = "/Chat";
+        window.location.href = "/chat";
     } catch (err) {
       console.error("Erro ao fazer login:", err);
       alert("Erro ao fazer login. Verifique suas credenciais.");

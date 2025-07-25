@@ -78,6 +78,7 @@ function Chat() {
     const fetchMessages = async () => {
       try {
         const token = localStorage.getItem("token");
+        console.log("Token:", localStorage.getItem("token"));
         const res = await axios.get("/api/chat/history", {
           headers: { Authorization: `Bearer ${token}` },
         });
