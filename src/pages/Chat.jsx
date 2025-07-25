@@ -116,25 +116,28 @@ function Chat() {
   };
 
   const sendMessage = async () => {
-    if (!input.trim()) return;
+  if (!input.trim()) return;
 
-    const userMessage = { role: "user", content: input };
-    setMessages((prev) => [...prev, userMessage]);
-    setInput("");
-    setLoading(true);
+  const userMessage = { role: "user", content: input };
+  setMessages((prev) => [...prev, userMessage]);
+  setInput("");
+  setLoading(true);
 
-    try {
-      const res = await axios.post("/chat/message", { message: input }, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
-      });
-      const botMessage = { role: "assistant", content: res.data.reply };
-      setMessages((prev) => [...prev, botMessage]);
-    } catch (err) {
-      alert("Erro ao enviar mensagem");
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    const res = await axios.post("/chat/message", { message: input });
+
+    const botMessages = Array.isArray(res.data.reply)
+      ? res.data.reply
+      : [{ role: "assistant", content: res.data.reply }];
+
+    setMessages((prev) => [...prev, ...botMessages]);
+  } catch (err) {
+    alert("Erro ao enviar mensagem");
+    console.error("Erro ao enviar mensagem:", err);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="chat-wrapper">

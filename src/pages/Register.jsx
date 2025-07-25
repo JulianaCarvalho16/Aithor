@@ -31,7 +31,7 @@ function Register() {
       localStorage.setItem("userName", name);
       localStorage.setItem("style", style);
       alert("Cadastro realizado! Faça login.");
-      navigate("/login");
+      window.location.href = "/Login";
     } catch (err) {
       alert("Erro ao registrar");
     }
@@ -80,7 +80,7 @@ function Register() {
             </select>
           <button type="submit">Cadastrar</button>
           <p>
-            Já tem conta? <a href="/login">Faça login</a>
+            Já tem conta? <a href="/Login">Faça login</a>
           </p>
         </form>
       </div>
