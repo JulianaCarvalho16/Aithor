@@ -1,7 +1,11 @@
 import axios from "axios";
 
+const isLocalhost = window.location.hostname === "localhost";
+
 const api = axios.create({
-  baseURL: "aithor-back-production.up.railway.app",
+  baseURL: isLocalhost
+    ? "http://localhost:3001"
+    : "https://aithor-back-production.up.railway.app",
 });
 
 api.interceptors.request.use((config) => {
