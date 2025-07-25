@@ -78,7 +78,7 @@ function Chat() {
     const fetchMessages = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("/chat/history", {
+        const res = await axios.get("/api/chat/history", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -137,7 +137,7 @@ function Chat() {
 
     try {
       const res = await axios.post(
-        "/chat/message",
+        "/api/chat/message",
         { message: input },
         {
           headers: {
