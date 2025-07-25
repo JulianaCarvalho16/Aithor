@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-   baseURL: "https://aithor-back-production.up.railway.app",
+   baseURL: "aithor-back-production.up.railway.app",
 });
 
 api.interceptors.request.use((config) => {
