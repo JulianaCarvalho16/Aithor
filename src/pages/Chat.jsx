@@ -45,11 +45,13 @@ function Chat() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [estilo, setEstilo] = useState(
+    (localStorage.getItem("style") || "fofo").trim().toLowerCase()
+  );
   const navigate = useNavigate();
 
   const theme = localStorage.getItem("theme") || "light";
   const userName = localStorage.getItem("userName") || "usuário";
-  const estilo = localStorage.getItem("style") || "fofo";
   const tema = temas[estilo];
 
   const getGreetingByStyle = (name, style) => {
@@ -72,18 +74,18 @@ function Chat() {
   useEffect(() => {
     const greetingMessage = {
       role: "assistant",
-      content: getGreetingByStyle(userName, estilo)
+      content: getGreetingByStyle(userName, estilo),
     };
-    setMessages([greetingMessage]); 
+    setMessages([greetingMessage]);
 
     const fetchMessages = async () => {
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get("/chat/history", {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         });
 
-        const messagesFromDB = res.data.flatMap(conv => conv.messages);
+        const messagesFromDB = res.data.flatMap((conv) => conv.messages);
         setMessages((prev) => [...prev, ...messagesFromDB]);
       } catch (err) {
         console.error("Erro ao buscar histórico:", err.message);
@@ -91,22 +93,24 @@ function Chat() {
     };
 
     fetchMessages();
-  }, []);
+  }, [estilo]);
 
   const handleEstiloChange = async (novoEstilo) => {
-    localStorage.setItem("style", novoEstilo);
-    setEstilo(novoEstilo);
+    const estiloFormatado = novoEstilo.trim().toLowerCase();
+    localStorage.setItem("style", estiloFormatado);
+    setEstilo(estiloFormatado); 
+
     try {
       const token = localStorage.getItem("token");
-
-      await axios.put("/auth/style", { style: novoEstilo }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await axios.put(
+        "/auth/style",
+        { style: estiloFormatado },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      console.log("✅ Estilo salvo no banco.");
     } catch (err) {
-      console.error("Erro ao atualizar estilo no banco:", err.message);
+      console.error("❌ Erro ao atualizar estilo:", err.message);
     }
-
-    window.location.reload();
   };
 
   const logout = () => {
@@ -116,28 +120,28 @@ function Chat() {
   };
 
   const sendMessage = async () => {
-  if (!input.trim()) return;
+    if (!input.trim()) return;
 
-  const userMessage = { role: "user", content: input };
-  setMessages((prev) => [...prev, userMessage]);
-  setInput("");
-  setLoading(true);
+    const userMessage = { role: "user", content: input };
+    setMessages((prev) => [...prev, userMessage]);
+    setInput("");
+    setLoading(true);
 
-  try {
-    const res = await axios.post("/chat/message", { message: input });
+    try {
+      const res = await axios.post("/chat/message", { message: input });
 
-    const botMessages = Array.isArray(res.data.reply)
-      ? res.data.reply
-      : [{ role: "assistant", content: res.data.reply }];
+      const botMessages = Array.isArray(res.data.reply)
+        ? res.data.reply
+        : [{ role: "assistant", content: res.data.reply }];
 
-    setMessages((prev) => [...prev, ...botMessages]);
-  } catch (err) {
-    alert("Erro ao enviar mensagem");
-    console.error("Erro ao enviar mensagem:", err);
-  } finally {
-    setLoading(false);
-  }
-};
+      setMessages((prev) => [...prev, ...botMessages]);
+    } catch (err) {
+      alert("Erro ao enviar mensagem");
+      console.error("Erro ao enviar mensagem:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="chat-wrapper">
@@ -167,7 +171,9 @@ function Chat() {
             <option value="sarcastico">Sarcastico</option>
           </select>
 
-          <button onClick={logout} className="logout-btn">Sair</button>
+          <button onClick={logout} className="logout-btn">
+            Sair
+          </button>
         </div>
       </div>
 
@@ -183,7 +189,8 @@ function Chat() {
             key={index}
             className="chat-message"
             style={{
-              backgroundColor: msg.role === "user" ? tema.userBg : tema.botBg,
+              backgroundColor:
+                msg.role === "user" ? tema.userBg : tema.botBg,
               color: "#000",
               alignSelf: msg.role === "user" ? "flex-end" : "flex-start",
               textAlign: msg.role === "user" ? "right" : "left",
@@ -194,7 +201,10 @@ function Chat() {
         ))}
 
         {loading && (
-          <div className="chat-message loading" style={{ backgroundColor: tema.botBg }}>
+          <div
+            className="chat-message loading"
+            style={{ backgroundColor: tema.botBg }}
+          >
             Escrevendo...
           </div>
         )}
