@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../services/api";
 import "./Register.css";
+import darkHeart from  "../assets/dark_heart.png";
+import pinkHeart from "../assets/pink_heart.png"
+
 
 function Register() {
   const [name, setName] = useState("");
@@ -38,7 +41,15 @@ function Register() {
   };
 
   return (
-    <div className={`register-wrapper ${theme}`}>
+    <div className={`register-wrapper ${theme}`}
+    style={{
+    backgroundColor: theme === "dark" ? "#1e1e1e" : "#ffff",
+    color: theme === "dark" ? "#ffff" : "#222",
+    backgroundImage: theme === "dark"
+      ? `url(${darkHeart})`
+      : `url(${pinkHeart})`,
+  }}
+    >
       <button className="theme-toggle" onClick={toggleTheme} type="button">
         {theme === "light" ? "🌙 Escuro" : "🌞 Claro"}
       </button>

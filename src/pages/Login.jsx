@@ -2,13 +2,19 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../services/api";
 import "./Login.css";
+import darkHeart from  "../assets/dark_heart.png";
+import pinkHeart from "../assets/pink_heart.png"
+import tearsJoy from "../assets/tears_joy.png";
+import offierWorker from "../assets/officer_worker.png";
+import menInSuit from "../assets/men_in_suit.png";
+import rollinEyes from "../assets/rolling_eyes.png";
 
 const temas = {
-  fofo: { fundo: "#ffeef5", emoji: "💖" },
-  engraçado: { fundo: "#fffbe6", emoji: "😂" },
-  formal: { fundo: "#f0f4f8", emoji: "🧑‍💼" },
-  serio: { fundo: "#eeeeee", emoji: "🕴️" },
-  sarcastico: { fundo: "#fff5f5", emoji: "🙄" },
+  fofo: { fundo: "#ffeef5", emoji: "💖", backImage: pinkHeart},
+  engraçado: { fundo: "#fffbe6", emoji: "😂", backImage:tearsJoy },
+  formal: { fundo: "#f0f4f8", emoji: "🧑‍💼", backImage:offierWorker },
+  serio: { fundo: "#eeeeee", emoji: "🕴️", backImage:menInSuit },
+  sarcastico: { fundo: "#fff5f5", emoji: "🙄" , backImage:rollinEyes},
 };
 
 function Login() {
@@ -48,12 +54,17 @@ function Login() {
 
   return (
     <div
-      className={`login-wrapper ${theme}`}
-      style={{
-        backgroundColor: theme === "dark" ? "#1e1e1e" : temaSelecionado.fundo,
-        color: theme === "dark" ? "#f9f9f9" : "#222",
-      }}
-    >
+  className={`login-wrapper ${theme}`}
+  style={{
+    backgroundColor: theme === "dark" ? "#1e1e1e" : temaSelecionado.fundo,
+    color: theme === "dark" ? "#f9f9f9" : "#222",
+    backgroundImage: theme === "dark"
+      ? `url(${darkHeart})`
+      : temaSelecionado.backImage
+      ? `url(${temaSelecionado.backImage})`
+      : "none",
+  }}
+>
         <button className="theme-toggle" onClick={toggleTheme}>
           {theme === "light" ? "🌙 Modo Escuro" : "🌞 Modo Claro"}
         </button>

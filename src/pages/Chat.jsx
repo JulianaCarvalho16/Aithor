@@ -2,6 +2,12 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../services/api";
 import "./Chat.css";
+import pinkHeart from "../assets/pink_heart.png";
+import tearsJoy from "../assets/tears_joy.png";
+import offierWorker from "../assets/officer_worker.png";
+import menInSuit from "../assets/men_in_suit.png";
+import rollinEyes from "../assets/rolling_eyes.png";
+
 
 const temas = {
   fofo: {
@@ -10,6 +16,8 @@ const temas = {
     botBg: "#f8bbd0",
     navbar: "#ffc0cb",
     emoji: "💖",
+    backImage: pinkHeart,
+    chatBar: "",
   },
   engraçado: {
     fundo: "#fffbe6",
@@ -17,6 +25,7 @@ const temas = {
     botBg: "#ffe082",
     navbar: "#fdd835",
     emoji: "😂",
+    backImage: tearsJoy,
   },
   formal: {
     fundo: "#f0f4f8",
@@ -24,6 +33,7 @@ const temas = {
     botBg: "#c9d8c5",
     navbar: "#90be6d",
     emoji: "🧑‍💼",
+    backImage: offierWorker,
   },
   serio: {
     fundo: "#eeeeee",
@@ -31,6 +41,7 @@ const temas = {
     botBg: "#cfcfcf",
     navbar: "#757575",
     emoji: "🕴️",
+    backImage: menInSuit,
   },
   sarcastico: {
     fundo: "#fff5f5",
@@ -38,6 +49,7 @@ const temas = {
     botBg: "#ffaaaa",
     navbar: "#f94144",
     emoji: "🙄",
+    backImage: rollinEyes,
   },
 };
 
@@ -180,8 +192,13 @@ function Chat() {
       <div
         className="chat-messages"
         style={{
-          backgroundColor: theme === "dark" ? "#1e1e1e" : tema.fundo,
+          backgroundColor: theme === "dark" ? "#1e1e1eeb" : tema.fundo,
           color: theme === "dark" ? "#f9f9f9" : "#222",
+          backgroundImage: theme === "dark"
+                ? "none"
+                : tema.backImage
+                ? `url(${tema.backImage})`
+                : "none",
         }}
       >
         {messages.map((msg, index) => (
@@ -210,7 +227,12 @@ function Chat() {
         )}
       </div>
 
-      <div className="chat-input">
+      <div className="chat-input"
+      style={{
+          backgroundColor: theme === "dark" ? "#1e1e1e" : tema.chatBar,
+          color: theme === "dark" ? "#f1f1f1" : "#000",
+        }}
+      >
         <input
           type="text"
           value={input}
